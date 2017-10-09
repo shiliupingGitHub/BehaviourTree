@@ -21,7 +21,6 @@ public class BehaviourTreeEditor : EditorWindow {
         mInstance.mTree = new BehaviourTree();
         mInstance.mDraws.Clear();
         mInstance.mTree.mRoot = new BehaviourNode();
-        mInstance.mTree.mRoot.mId = 0;
         mInstance.mTree.mRoot.mName = "root";
         mInstance.mTree.mRoot.mPos = new Rect(0, (int)(mInstance.position.height / 2.0f), 0, 0);
         mInstance.mTree.mNodes.Add(mInstance.mTree.mRoot);
@@ -54,7 +53,6 @@ public class BehaviourTreeEditor : EditorWindow {
             }
         }
     }
-    Vector2 mSpos = Vector2.zero;
     void OnGUI()
     {
 
@@ -106,7 +104,6 @@ public class BehaviourTreeEditor : EditorWindow {
         mOperation = OPERATION.NONE;
         mCurMaxId++;
         BehaviourNode t = new BehaviourNode();
-        t.mId = mCurMaxId;
         t.mName = "attack";
         t.mPos = new Rect(pos.x, pos.y, 0, 0);
         mTree.mNodes.Add(t);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using MyMVC;
 public class BehaviourTree  {
+  public System.Func<BehavourCondition, bool> mCondition;
+    public System.Action<BehavourAction> mAcion;
    public BehaviourNode mRoot;
   public  List<BehaviourNode> mNodes = new List<BehaviourNode>();
    public void LoadTree(string text)
@@ -12,6 +14,10 @@ public class BehaviourTree  {
         {
             AddNode(mRoot, mNodes);
         }
+    }
+    public void Run()
+    {
+        mRoot.Run(this);
     }
     void AddNode(BehaviourNode n , List<BehaviourNode> ns)
     {

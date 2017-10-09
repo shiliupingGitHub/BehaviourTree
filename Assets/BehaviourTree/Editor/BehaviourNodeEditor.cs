@@ -80,10 +80,6 @@ public class BehaviourNodeEditor
         #region dragPure
         GUILayout.BeginHorizontal();
         GUILayout.BeginVertical();
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("id:");
-        node.mId = EditorGUILayout.IntField(node.mId, GUILayout.MaxWidth(size));
-        GUILayout.EndHorizontal();
 
   
 
@@ -96,7 +92,7 @@ public class BehaviourNodeEditor
         foreach (var n in node.mSubNodes)
         {
             
-            if(GUILayout.Button("del:action:"+ n.mName +"id:"+n.mId))
+            if(GUILayout.Button("del:action:"+ n.mName))
             {
                 r.Add(n);
               
@@ -141,6 +137,9 @@ public class BehaviourNodeEditor
                     {
                         c.mStr = EditorGUILayout.TextField(c.mStr);
                     }
+                    break;
+                case BehavourCondition.DataType.BOOL:
+                    c.mB = EditorGUILayout.Toggle(c.mB);
                     break;
             }
             if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
