@@ -66,6 +66,7 @@ public class BehaviourNodeEditor
             mLastSelectConnect = null;
             if (BehaviourTreeEditor.mInstance != null)
                 BehaviourTreeEditor.mInstance.Repaint();
+            if(null != BehaviourNodePreview.Instance)
             BehaviourNodePreview.Instance.Repaint();
            
         }
