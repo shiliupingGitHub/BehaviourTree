@@ -15,9 +15,9 @@ public class BehaviourTree  {
             AddNode(mRoot, mNodes);
         }
     }
-    public void Run()
+    public void Run(List<BehavourAction> actions, bool baction = true)
     {
-        mRoot.Run(this);
+        mRoot.Run(this, actions, baction);
     }
     void AddNode(BehaviourNode n , List<BehaviourNode> ns)
     {

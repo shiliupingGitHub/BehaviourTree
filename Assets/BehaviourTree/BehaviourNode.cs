@@ -7,7 +7,7 @@ public class BehaviourNode  {
     public List<BehavourCondition> mCondition = new List<BehavourCondition>();
    public List<BehaviourNode> mSubNodes = new List<BehaviourNode>();
     public List<BehavourAction> mActions = new List<BehavourAction>();
-    public bool Run(BehaviourTree tree)
+    public bool Run(BehaviourTree tree, List<BehavourAction> mRunActions,bool baction = true)
     {
         foreach(var c in mCondition)
         {
@@ -19,14 +19,23 @@ public class BehaviourNode  {
         }
         foreach(var s in mSubNodes)
         {
-            if (!s.Run(tree))
+            if (!s.Run(tree, mRunActions, baction))
                 return false;
+ 
         }
-        foreach(var a in mActions)
+
+        foreach (var a in mActions)
         {
-            if (null != tree.mAcion)
-                tree.mAcion(a);
+            mRunActions.Add(a);
+            if(baction)
+            {
+                if (null != tree.mAcion)
+                    tree.mAcion(a);
+            }
+           
         }
+
+
         return true;
     }
 }
