@@ -13,7 +13,7 @@ public class BehaviourNodeEditor
 
     public void DrawSimple(int id)
     {
-        node.mPos = GUILayout.Window(id, node.mPos, WindowFunctionSimple, node.mAction);
+        node.mPos = GUILayout.Window(id, node.mPos, WindowFunctionSimple, node.mName);
         int t = 0;
         foreach (var n in node.mSubNodes)
         {
@@ -44,8 +44,8 @@ public class BehaviourNodeEditor
         if(GUILayout.Button("preview"))
         {
 
-            BehaviourNodePreview t =EditorWindow.GetWindow<BehaviourNodePreview>(true);
-            t.mEditor = this;
+            BehaviourNodePreview.Instance  =EditorWindow.GetWindow<BehaviourNodePreview>(true);
+            BehaviourNodePreview.Instance.mEditor = this;
         }
         if (GUILayout.Button("delete"))
         {
@@ -64,6 +64,7 @@ public class BehaviourNodeEditor
                     mLastSelectConnect.mSubNodes.Add(node);
             if (BehaviourTreeEditor.mInstance != null)
                 BehaviourTreeEditor.mInstance.Repaint();
+            BehaviourNodePreview.Instance.Repaint();
             mLastSelectConnect = null;
         }
     }
@@ -82,10 +83,7 @@ public class BehaviourNodeEditor
         node.mId = EditorGUILayout.IntField(node.mId, GUILayout.MaxWidth(size));
         GUILayout.EndHorizontal();
 
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("action:");
-        node.mAction = GUILayout.TextField(node.mAction);
-        GUILayout.EndHorizontal();
+  
 
         GUILayout.BeginHorizontal();
         GUILayout.EndHorizontal();
@@ -96,7 +94,7 @@ public class BehaviourNodeEditor
         foreach (var n in node.mSubNodes)
         {
             
-            if(GUILayout.Button("del:action:"+ n.mAction +"id:"+n.mId))
+            if(GUILayout.Button("del:action:"+ n.mName +"id:"+n.mId))
             {
                 r.Add(n);
               
@@ -107,6 +105,7 @@ public class BehaviourNodeEditor
             node.mSubNodes.Remove(t);
             if (BehaviourTreeEditor.mInstance != null)
                 BehaviourTreeEditor.mInstance.Repaint();
+            BehaviourNodePreview.Instance.Repaint();
         }
         if (GUILayout.Button("link", GUILayout.MaxWidth(size)))
             OnConnectSunNode();
@@ -132,6 +131,17 @@ public class BehaviourNodeEditor
                         c.mFloatValue = EditorGUILayout.FloatField(c.mFloatValue);
                     }
                     break;
+                case BehavourCondition.DataType.INT:
+                    {
+                        c.mOperation = (BehavourCondition.OPREATION)EditorGUILayout.EnumPopup("", c.mOperation, GUILayout.MaxWidth(size));
+                        c.mIntValue = EditorGUILayout.IntField(c.mIntValue);
+                    }
+                    break;
+                case BehavourCondition.DataType.STRING:
+                    {
+                        c.mStr = EditorGUILayout.TextField(c.mStr);
+                    }
+                    break;
             }
             if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
             {
@@ -147,6 +157,51 @@ public class BehaviourNodeEditor
         if (GUILayout.Button("add", GUILayout.MaxWidth(size)))
             node.mCondition.Add(new BehavourCondition());
         #endregion
+
+
+        GUILayout.BeginVertical();
+        GUILayout.Space(1);
+        GUILayout.Label("----action-----");
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("action:");
+        node.mName = GUILayout.TextField(node.mName);
+        GUILayout.EndHorizontal();
+        
+        foreach(var a in node.mActions)
+        {
+            GUILayout.BeginHorizontal();
+            a.mDataType = (BehavourAction.DataType)EditorGUILayout.EnumPopup("", a.mDataType, GUILayout.MaxWidth(size));
+            a.mType = EditorGUILayout.TextField(a.mType, GUILayout.MaxWidth(size));
+            switch (a.mDataType)
+            {
+                case BehavourAction.DataType.FLOAT:
+                    {
+                        a.f0 = EditorGUILayout.FloatField(a.f0);
+                        a.f1 = EditorGUILayout.FloatField(a.f1);
+                    }
+                    break;
+                case BehavourAction.DataType.INT:
+                    {
+                        a.n0 = EditorGUILayout.IntField(a.n0);
+                        a.n1 = EditorGUILayout.IntField(a.n1);
+                    }
+                    break;
+                case BehavourAction.DataType.STRING:
+                    {
+                        a.mStr = EditorGUILayout.TextField(a.mStr);
+                    }
+                    break;
+            }
+            GUILayout.EndHorizontal();
+
+        }
+        
+        if (GUILayout.Button("add", GUILayout.MaxWidth(size)))
+            node.mActions.Add(new BehavourAction());
+        GUILayout.EndVertical();
+
+
+
         GUILayout.EndVertical();
     }
 }

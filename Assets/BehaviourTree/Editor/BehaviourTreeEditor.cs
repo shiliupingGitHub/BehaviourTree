@@ -22,7 +22,7 @@ public class BehaviourTreeEditor : EditorWindow {
         mInstance.mDraws.Clear();
         mInstance.mTree.mRoot = new BehaviourNode();
         mInstance.mTree.mRoot.mId = 0;
-        mInstance.mTree.mRoot.mAction = "root";
+        mInstance.mTree.mRoot.mName = "root";
         mInstance.mTree.mRoot.mPos = new Rect(0, (int)(mInstance.position.height / 2.0f), 0, 0);
         mInstance.mTree.mNodes.Add(mInstance.mTree.mRoot);
         BehaviourNodeEditor d = new BehaviourNodeEditor();
@@ -39,6 +39,7 @@ public class BehaviourTreeEditor : EditorWindow {
             {
                 mTree.mRoot = null;
                 mTree.mNodes.Clear();
+                mCurMaxId = 0;
             }
             else
             {
@@ -92,12 +93,14 @@ public class BehaviourTreeEditor : EditorWindow {
         mCurMaxId++;
         BehaviourNode t = new BehaviourNode();
         t.mId = mCurMaxId;
-        t.mAction = "attack";
+        t.mName = "attack";
         t.mPos = new Rect(pos.x, pos.y, 0, 0);
         mTree.mNodes.Add(t);
         BehaviourNodeEditor d = new BehaviourNodeEditor();
         d.node = t;
         mDraws.Add(d);
+        if (mTree.mRoot == null)
+            mTree.mRoot = d.node;
     }
     void OnOperationMenu()
     {
