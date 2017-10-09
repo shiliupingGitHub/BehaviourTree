@@ -22,12 +22,35 @@ public class BehaviourTreeEditor : EditorWindow {
         mInstance.mDraws.Clear();
         mInstance.mTree.mRoot = new BehaviourNode();
         mInstance.mTree.mRoot.mId = 0;
-        mInstance.mTree.mRoot.mAction = string.Empty;
+        mInstance.mTree.mRoot.mAction = "root";
         mInstance.mTree.mRoot.mPos = new Rect(0, (int)(mInstance.position.height / 2.0f), 0, 0);
         mInstance.mTree.mNodes.Add(mInstance.mTree.mRoot);
         BehaviourNodeEditor d = new BehaviourNodeEditor();
         d.node = mInstance.mTree.mRoot;
         mInstance.mDraws.Add(d);
+    }
+    public void DeleteNode(BehaviourNodeEditor n)
+    {
+        mDraws.Remove(n);
+        if(null!= mTree)
+        {
+            mTree.mNodes.Remove(n.node);
+            if(mTree.mRoot == n.node)
+            {
+                mTree.mRoot = null;
+                mTree.mNodes.Clear();
+            }
+            else
+            {
+                foreach(var t in mTree.mNodes)
+                {
+                    if(t.mSubNodes.Contains(n.node))
+                    {
+                        t.mSubNodes.Remove(n.node);
+                    }
+                }
+            }
+        }
     }
     Vector2 mSpos = Vector2.zero;
     void OnGUI()
@@ -69,7 +92,7 @@ public class BehaviourTreeEditor : EditorWindow {
         mCurMaxId++;
         BehaviourNode t = new BehaviourNode();
         t.mId = mCurMaxId;
-        t.mAction = string.Empty;
+        t.mAction = "attack";
         t.mPos = new Rect(pos.x, pos.y, 0, 0);
         mTree.mNodes.Add(t);
         BehaviourNodeEditor d = new BehaviourNodeEditor();
@@ -86,7 +109,7 @@ public class BehaviourTreeEditor : EditorWindow {
     }
     void DrawNode(BehaviourNodeEditor d)
     {
-        d.Draw(mDrawId);
+        d.DrawSimple(mDrawId);
         mDrawId++;
     }
 	

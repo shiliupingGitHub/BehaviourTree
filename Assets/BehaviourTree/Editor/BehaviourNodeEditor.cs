@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
-public class BehaviourNodeEditor {
+public class BehaviourNodeEditor
+{
     public BehaviourNode node;
     static BehaviourNode mLastSelectConnect = null;
     float size = 40;
     public void Draw(int id)
     {
-        
-        node.mPos = GUILayout.Window(id, node.mPos, WindowFunction, node.mAction);
+       WindowFunction(id);
+    }
+
+    public void DrawSimple(int id)
+    {
+        node.mPos = GUILayout.Window(id, node.mPos, WindowFunctionSimple, node.mAction);
         int t = 0;
         foreach (var n in node.mSubNodes)
         {
@@ -20,6 +25,35 @@ public class BehaviourNodeEditor {
 
         }
     }
+    void OnGUI()
+    {
+
+        this.Draw(0);
+        if(GUI.changed)
+        {
+            if (BehaviourTreeEditor.mInstance != null)
+                BehaviourTreeEditor.mInstance.Repaint();
+        }
+        
+    }
+    void WindowFunctionSimple(int id)
+    {
+
+
+        EditorGUILayout.BeginVertical();
+        if(GUILayout.Button("preview"))
+        {
+
+            BehaviourNodePreview t =EditorWindow.GetWindow<BehaviourNodePreview>(true);
+            t.mEditor = this;
+        }
+        if (GUILayout.Button("delete"))
+        {
+            BehaviourTreeEditor.mInstance.DeleteNode(this);
+        }
+        EditorGUILayout.EndVertical();
+        GUI.DragWindow();
+    }
     void OnConnectSunNode()
     {
         if (mLastSelectConnect == null)
@@ -28,14 +62,17 @@ public class BehaviourNodeEditor {
         {
             if(!mLastSelectConnect.mSubNodes.Contains(node))
                     mLastSelectConnect.mSubNodes.Add(node);
+            if (BehaviourTreeEditor.mInstance != null)
+                BehaviourTreeEditor.mInstance.Repaint();
             mLastSelectConnect = null;
         }
     }
 
     void WindowFunction(int id)
     {
-       
 
+        if (null == node)
+            return;
         GUILayout.BeginVertical();
         #region dragPure
         GUILayout.BeginHorizontal();
@@ -59,7 +96,7 @@ public class BehaviourNodeEditor {
         foreach (var n in node.mSubNodes)
         {
             
-            if(GUILayout.Button("del"))
+            if(GUILayout.Button("del:action:"+ n.mAction +"id:"+n.mId))
             {
                 r.Add(n);
               
@@ -68,6 +105,8 @@ public class BehaviourNodeEditor {
         foreach(var t in r)
         {
             node.mSubNodes.Remove(t);
+            if (BehaviourTreeEditor.mInstance != null)
+                BehaviourTreeEditor.mInstance.Repaint();
         }
         if (GUILayout.Button("link", GUILayout.MaxWidth(size)))
             OnConnectSunNode();
@@ -109,8 +148,5 @@ public class BehaviourNodeEditor {
             node.mCondition.Add(new BehavourCondition());
         #endregion
         GUILayout.EndVertical();
-
-       
-        GUI.DragWindow();
     }
 }
