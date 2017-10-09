@@ -4,7 +4,7 @@ using UnityEditor;
 public class BehaviourNodeEditor
 {
     public BehaviourNode node;
-    static BehaviourNode mLastSelectConnect = null;
+   public static BehaviourNode mLastSelectConnect = null;
     float size = 40;
     public void Draw(int id)
     {
@@ -20,8 +20,7 @@ public class BehaviourNodeEditor
             t++;
             Vector3 p0 = new Vector3(node.mPos.x + node.mPos.width, (int)(node.mPos.y + node.mPos.height / 2.0));
             Vector3 p1 = new Vector3(n.mPos.x, n.mPos.y + (int)(n.mPos.height / 2.0f));
-            Handles.color = Color.red;
-            Handles.DrawLine(p0, p1);
+            BehaviourTreeEditor.mInstance.DrawNodeCurve(p0, p1, Color.red);
 
         }
     }
@@ -51,6 +50,8 @@ public class BehaviourNodeEditor
         {
             BehaviourTreeEditor.mInstance.DeleteNode(this);
         }
+        if (GUILayout.Button("link", GUILayout.MaxWidth(size)))
+            OnConnectSunNode();
         EditorGUILayout.EndVertical();
         GUI.DragWindow();
     }
@@ -62,10 +63,11 @@ public class BehaviourNodeEditor
         {
             if(!mLastSelectConnect.mSubNodes.Contains(node))
                     mLastSelectConnect.mSubNodes.Add(node);
+            mLastSelectConnect = null;
             if (BehaviourTreeEditor.mInstance != null)
                 BehaviourTreeEditor.mInstance.Repaint();
             BehaviourNodePreview.Instance.Repaint();
-            mLastSelectConnect = null;
+           
         }
     }
 
@@ -107,8 +109,6 @@ public class BehaviourNodeEditor
                 BehaviourTreeEditor.mInstance.Repaint();
             BehaviourNodePreview.Instance.Repaint();
         }
-        if (GUILayout.Button("link", GUILayout.MaxWidth(size)))
-            OnConnectSunNode();
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
         #endregion

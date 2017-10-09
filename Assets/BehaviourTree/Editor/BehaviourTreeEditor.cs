@@ -29,6 +29,7 @@ public class BehaviourTreeEditor : EditorWindow {
         d.node = mInstance.mTree.mRoot;
         mInstance.mDraws.Add(d);
     }
+
     public void DeleteNode(BehaviourNodeEditor n)
     {
         mDraws.Remove(n);
@@ -66,6 +67,19 @@ public class BehaviourTreeEditor : EditorWindow {
         }
         EndWindows();
         OnEvent();
+        if(BehaviourNodeEditor.mLastSelectConnect != null)
+        {
+            BehaviourNode node = BehaviourNodeEditor.mLastSelectConnect;
+            Vector3 p0 = new Vector3(node.mPos.x + node.mPos.width, (int)(node.mPos.y + node.mPos.height / 2.0));
+            DrawNodeCurve(p0, Event.current.mousePosition, Color.red);
+        }
+    }
+    void Update()
+    {
+        if (BehaviourNodeEditor.mLastSelectConnect != null)
+        {
+            Repaint();
+        }
     }
     void OnEvent()
     {
@@ -102,6 +116,14 @@ public class BehaviourTreeEditor : EditorWindow {
         if (mTree.mRoot == null)
             mTree.mRoot = d.node;
     }
+   public void DrawNodeCurve(Vector3 start, Vector3 end, Color color)
+    {
+        Vector3 startPos = new Vector3(start.x , start.y);
+        Vector3 endPos = new Vector3(end.x, end.y);
+        Vector3 startTan = startPos + Vector3.right * 50;
+        Vector3 endTan = endPos + Vector3.left * 50;
+        Handles.DrawBezier(startPos, endPos, startTan, endTan, color, null, 4);
+    }
     void OnSaveTree(System.Object o)
     {
         string file = EditorUtility.SaveFilePanel(string.Empty, string.Empty, string.Empty, "xml");
@@ -120,6 +142,7 @@ public class BehaviourTreeEditor : EditorWindow {
            string t = System.IO.File.ReadAllText(file);
             mTree.LoadTree(t);
             mDraws.Clear();
+            mCurMaxId = 0;
             foreach(var n in mTree.mNodes)
             {
                 BehaviourNodeEditor e = new BehaviourNodeEditor();
