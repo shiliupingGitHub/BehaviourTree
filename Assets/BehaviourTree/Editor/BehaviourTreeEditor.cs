@@ -102,11 +102,40 @@ public class BehaviourTreeEditor : EditorWindow {
         if (mTree.mRoot == null)
             mTree.mRoot = d.node;
     }
+    void OnSaveTree(System.Object o)
+    {
+        string file = EditorUtility.SaveFilePanel(string.Empty, string.Empty, string.Empty, "xml");
+        if(!string.IsNullOrEmpty(file))
+         {
+            string ret =  mTree.SaveTree();
+            System.IO.File.WriteAllText(file, ret);
+        }
+   
+      }
+    void OnLoadTree(System.Object o)
+    {
+       string file = EditorUtility.OpenFilePanel("load tree",string.Empty,"xml");
+        if(!string.IsNullOrEmpty(file))
+        {
+           string t = System.IO.File.ReadAllText(file);
+            mTree.LoadTree(t);
+            mDraws.Clear();
+            foreach(var n in mTree.mNodes)
+            {
+                BehaviourNodeEditor e = new BehaviourNodeEditor();
+                e.node = n;
+                mDraws.Add(e);
+            }
+            Repaint();
+        }
+    }
     void OnOperationMenu()
     {
        // mOperation = OPERATION.MENU;
         GenericMenu menu = new GenericMenu();
         menu.AddItem(new GUIContent("New Node"), false, OnMenuNodeNode, Event.current.mousePosition);
+        menu.AddItem(new GUIContent("Save Tree"), false, OnSaveTree, Event.current.mousePosition);
+        menu.AddItem(new GUIContent("Load Tree"), false, OnLoadTree, Event.current.mousePosition);
         menu.ShowAsContext();
      
     }
