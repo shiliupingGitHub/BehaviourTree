@@ -61,8 +61,12 @@ public class BehaviourNodeEditor
             mLastSelectConnect = this.node;
         else
         {
-            if(!mLastSelectConnect.mSubNodes.Contains(node))
+            if(mLastSelectConnect != node)
+            {
+                if (!mLastSelectConnect.mSubNodes.Contains(node))
                     mLastSelectConnect.mSubNodes.Add(node);
+            }
+            
             mLastSelectConnect = null;
             if (BehaviourTreeEditor.mInstance != null)
                 BehaviourTreeEditor.mInstance.Repaint();

@@ -85,7 +85,9 @@ public class BehaviourTreeEditor : EditorWindow {
         {
             case EventType.ContextClick:
                 {
-                    if(mOperation == OPERATION.NONE)
+                    if (BehaviourNodeEditor.mLastSelectConnect != null)
+                        BehaviourNodeEditor.mLastSelectConnect = null;
+                    if (mOperation == OPERATION.NONE)
                     {
                         OnOperationMenu();
                         
@@ -113,6 +115,7 @@ public class BehaviourTreeEditor : EditorWindow {
         if (mTree.mRoot == null)
             mTree.mRoot = d.node;
     }
+    int mc = 0;
    public void DrawNodeCurve(Vector3 start, Vector3 end, Color color)
     {
         Vector3 startPos = new Vector3(start.x , start.y);
