@@ -3,91 +3,91 @@ using System.Collections.Generic;
 using UnityEditor;
 public class BehaviourTreeEditor : EditorWindow {
     public static BehaviourTreeEditor mInstance;
-    BehaviourNode mNode;
-    Dictionary<int, BehaviourNode> mNodes = new Dictionary<int, BehaviourNode>();
+    BehaviourTree mTree;
+    List<BehaviourNodeEditor> mDraws = new List<BehaviourNodeEditor>();
     int mCurMaxId = 0;
+    int mDrawId = 0;
+    public enum OPERATION
+    {
+        NONE,
+    }
+    OPERATION mOperation = OPERATION.NONE;
     [MenuItem("Window/BehaviourTreeWindow")]
     
     static void OpenWindow()
     {
        
         mInstance = GetWindow<BehaviourTreeEditor>(true);
-        mInstance.mNode = new BehaviourNode();
-        mInstance.mNode.mId = 0;
-        mInstance.mNode.mAction = string.Empty;
-        mInstance.mNode.mPos = new Rect(0, (int)(mInstance.position.height / 2.0f), 0, 0);
-        mInstance.mNodes[0] = mInstance.mNode;
+        mInstance.mTree = new BehaviourTree();
+        mInstance.mDraws.Clear();
+        mInstance.mTree.mRoot = new BehaviourNode();
+        mInstance.mTree.mRoot.mId = 0;
+        mInstance.mTree.mRoot.mAction = string.Empty;
+        mInstance.mTree.mRoot.mPos = new Rect(0, (int)(mInstance.position.height / 2.0f), 0, 0);
+        mInstance.mTree.mNodes.Add(mInstance.mTree.mRoot);
+        BehaviourNodeEditor d = new BehaviourNodeEditor();
+        d.node = mInstance.mTree.mRoot;
+        mInstance.mDraws.Add(d);
     }
+    Vector2 mSpos = Vector2.zero;
     void OnGUI()
     {
+
+
         BeginWindows();
-        foreach(var n in mNodes)
+        mDrawId = 0;
+        foreach (var n in mDraws)
         {
-            DrawNode(n.Value);
+            DrawNode(n);
         }
         EndWindows();
+        OnEvent();
     }
-    BehaviourNode GetNode(int id, BehaviourNode root)
+    void OnEvent()
     {
-        if (root.mId == id)
-            return root;
-        foreach(var n in root.mSubNodes)
+        switch (Event.current.type)
         {
-            BehaviourNode ret = GetNode(id,n);
-            if (null != ret)
-                return ret;
+            case EventType.ContextClick:
+                {
+                    if(mOperation == OPERATION.NONE)
+                    {
+                        OnOperationMenu();
+                        
+                    }
+                    Event.current.Use();
+                }
+                break;
+           
         }
-        return null;
+
     }
-    void WindowFunction(int id)
+
+    void OnMenuNodeNode(System.Object o)
     {
-        BehaviourNode n = GetNode(id,mNode);
-        GUILayout.BeginVertical();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("id:");
-        n.mId =EditorGUILayout.IntField(n.mId);
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("action:");
-        n.mAction = GUILayout.TextField(n.mAction);
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-        GUILayout.EndHorizontal();
-
-        GUILayout.EndVertical();
+        Vector2 pos = (Vector2)o;
+        mOperation = OPERATION.NONE;
+        mCurMaxId++;
+        BehaviourNode t = new BehaviourNode();
+        t.mId = mCurMaxId;
+        t.mAction = string.Empty;
+        t.mPos = new Rect(pos.x, pos.y, 0, 0);
+        mTree.mNodes.Add(t);
+        BehaviourNodeEditor d = new BehaviourNodeEditor();
+        d.node = t;
+        mDraws.Add(d);
     }
-    void DrawNode(BehaviourNode node)
+    void OnOperationMenu()
     {
-        mCurMaxId = Mathf.Max(node.mId, mCurMaxId);
-        node.mPos = GUILayout.Window(node.mId, node.mPos, WindowFunction, node.mAction);
-        foreach(var n in node.mSubNodes)
-        {
-            Vector3 p0 = new Vector3(n.mPos.x + n.mPos.width, (int)(n.mPos.y + n.mPos.height / 2.0));
-            Vector3 p1 = new Vector3(n.mPos.x, n.mPos.y + (int)(n.mPos.height / 2.0f));
-            Handles.DrawLine(p0, p1);
-        }
-        //Rect nPos = new Rect(x , y, width, height);
-        //GUILayout.Window(node.mId, nPos, WindowFunction, node.mAction);
-
-        //int nx =x+ width + gap;
-        //float totalLen = (height + gap) * (node.mSubNodes.Count - 1);
-        //int ny = (int)(position.height / 2 - totalLen / 2);
-
-        //foreach (var n in node.mSubNodes)
-        //{
-
-
-        //    //Rect r =  DrawNode(n, nx, ny);
-        //    //Vector3 p0 = new Vector3(nPos.x + width, (int)(nPos.y +height/2.0));
-        //    //Vector3 p1 = new Vector3(r.x , r.y + (int)(height/2.0f));
-        //    //Handles.DrawLine(p0, p1);
-        //    //ny += height + gap;
-        //}
-        //  return nPos;
-
-
+       // mOperation = OPERATION.MENU;
+        GenericMenu menu = new GenericMenu();
+        menu.AddItem(new GUIContent("New Node"), false, OnMenuNodeNode, Event.current.mousePosition);
+        menu.ShowAsContext();
+     
+    }
+    void DrawNode(BehaviourNodeEditor d)
+    {
+        d.Draw(mDrawId);
+        mDrawId++;
     }
 	
 }
