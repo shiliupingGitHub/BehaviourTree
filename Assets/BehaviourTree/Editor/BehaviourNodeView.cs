@@ -163,7 +163,7 @@ namespace Behaviour
             GUILayout.Label("action:");
             node.mName = GUILayout.TextField(node.mName);
             GUILayout.EndHorizontal();
-
+            List<BehavourAction> r3 = new List<BehavourAction>();
             foreach (var a in node.mActions)
             {
                 GUILayout.BeginHorizontal();
@@ -171,6 +171,11 @@ namespace Behaviour
                 a.mType = EditorGUILayout.TextField(a.mType, GUILayout.MaxWidth(size));
                 switch (a.mDataType)
                 {
+                    case BehavourAction.DataType.BOOL:
+                        {
+                            a.mB = EditorGUILayout.Toggle(a.mB);
+                        }
+                        break;
                     case BehavourAction.DataType.FLOAT:
                         {
                             a.f0 = EditorGUILayout.FloatField(a.f0);
@@ -189,10 +194,18 @@ namespace Behaviour
                         }
                         break;
                 }
+                if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
+                {
+                    r3.Add(a);
+
+                }
                 GUILayout.EndHorizontal();
 
             }
-
+            foreach(var t in r3)
+            {
+                node.mActions.Remove(t);
+            }
             if (GUILayout.Button("add", GUILayout.MaxWidth(size)))
                 node.mActions.Add(new BehavourAction());
             GUILayout.EndVertical();
