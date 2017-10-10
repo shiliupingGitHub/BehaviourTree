@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 
-namespace MyMVC
+namespace Behaviour
 {
     public static class XmlHelper
     {

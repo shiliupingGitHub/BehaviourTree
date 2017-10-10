@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
-public class BehaviourNodePreview : EditorWindow {
-    public BehaviourNodeEditor mEditor;
-    public static BehaviourNodePreview Instance;
-    void OnGUI()
+namespace Behaviour
+{
+    public class BehaviourNodePreview : EditorWindow
     {
-        mEditor.Draw(0);
+        public BehaviourNodeView mEditor;
+        public static BehaviourNodePreview Instance;
+        void OnGUI()
+        {
+            mEditor.Draw(0);
+        }
     }
 }
+
+
