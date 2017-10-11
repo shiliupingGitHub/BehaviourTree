@@ -5,7 +5,7 @@ namespace Behaviour
     public class BehaviourTree
     {
         public System.Func<BehavourCondition, bool> mCondition;
-        public System.Action<BehavourAction> mAcion;
+        public System.Action<BehavourAction,System.Object> mAcion;
         public BehaviourNode mRoot;
         public List<BehaviourNode> mNodes = new List<BehaviourNode>();
         public void LoadTree(string text)
@@ -17,9 +17,9 @@ namespace Behaviour
                 AddNode(mRoot, mNodes);
             }
         }
-        public void Run(List<BehavourAction> actions, bool baction = true)
+        public void Run(List<BehavourAction> actions,System.Object o, bool baction = true)
         {
-            mRoot.Run(this, actions, baction);
+            mRoot.Run(this, actions,o, baction);
         }
         void AddNode(BehaviourNode n, List<BehaviourNode> ns)
         {

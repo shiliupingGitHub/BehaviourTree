@@ -23,7 +23,7 @@ namespace Behaviour
                 return new Vector3(mPos.x + 5, mPos.y + (int)(mPos.height - 15));
             }
         }
-        public bool Run(BehaviourTree tree, List<BehavourAction> mRunActions, bool baction = true)
+        public bool Run(BehaviourTree tree, List<BehavourAction> mRunActions,System.Object o, bool baction = true)
         {
             foreach (var c in mCondition)
             {
@@ -35,7 +35,7 @@ namespace Behaviour
             }
             foreach (var s in mSubNodes)
             {
-                if (!s.Run(tree, mRunActions, baction))
+                if (!s.Run(tree, mRunActions,o, baction))
                     return false;
 
             }
@@ -46,7 +46,7 @@ namespace Behaviour
                 if (baction)
                 {
                     if (null != tree.mAcion)
-                        tree.mAcion(a);
+                        tree.mAcion(a,o);
                 }
 
             }
