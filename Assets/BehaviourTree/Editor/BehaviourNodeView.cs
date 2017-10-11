@@ -68,13 +68,17 @@ namespace Behaviour
 
             }
         }
-
+        
         void WindowFunction(int id)
         {
 
             if (null == node)
                 return;
             GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("NodeName:");
+            node.mName = GUILayout.TextField(node.mName);
+            GUILayout.EndHorizontal();
             #region dragPure
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
@@ -159,46 +163,103 @@ namespace Behaviour
             GUILayout.BeginVertical();
             GUILayout.Space(1);
             GUILayout.Label("----action-----");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("action:");
-            node.mName = GUILayout.TextField(node.mName);
-            GUILayout.EndHorizontal();
+
             List<BehavourAction> r3 = new List<BehavourAction>();
             foreach (var a in node.mActions)
             {
                 GUILayout.BeginHorizontal();
-                a.mDataType = (BehavourAction.DataType)EditorGUILayout.EnumPopup("", a.mDataType, GUILayout.MaxWidth(size));
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Name:", GUILayout.MaxWidth(size));
                 a.mType = EditorGUILayout.TextField(a.mType, GUILayout.MaxWidth(size));
-                switch (a.mDataType)
-                {
-                    case BehavourAction.DataType.BOOL:
-                        {
-                            a.mB = EditorGUILayout.Toggle(a.mB);
-                        }
-                        break;
-                    case BehavourAction.DataType.FLOAT:
-                        {
-                            a.f0 = EditorGUILayout.FloatField(a.f0);
-                            a.f1 = EditorGUILayout.FloatField(a.f1);
-                        }
-                        break;
-                    case BehavourAction.DataType.INT:
-                        {
-                            a.n0 = EditorGUILayout.IntField(a.n0);
-                            a.n1 = EditorGUILayout.IntField(a.n1);
-                        }
-                        break;
-                    case BehavourAction.DataType.STRING:
-                        {
-                            a.mStr = EditorGUILayout.TextField(a.mStr);
-                        }
-                        break;
-                }
                 if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
                 {
                     r3.Add(a);
 
                 }
+                GUILayout.EndHorizontal();
+                GUILayout.BeginVertical();
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Float:", GUILayout.MaxWidth(size));
+                for (int i = 0; i < a.mFloat.Count; i++)
+                {
+                    a.mFloat[i] = EditorGUILayout.FloatField(a.mFloat[i], GUILayout.MaxWidth(size));
+                }
+                if(GUILayout.Button("add",GUILayout.MaxWidth(size)))
+                {
+                    a.mFloat.Add(0);
+                }
+                if(a.mFloat.Count > 0)
+                {
+                    if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
+                    {
+                        a.mFloat.RemoveAt(a.mFloat.Count - 1);
+                    }
+                }
+                GUILayout.EndHorizontal();
+
+
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Int:", GUILayout.MaxWidth(size));
+                for (int i = 0; i < a.mInt.Count; i++)
+                {
+                    a.mInt[i] = EditorGUILayout.IntField(a.mInt[i], GUILayout.MaxWidth(size));
+                }
+                if (GUILayout.Button("add", GUILayout.MaxWidth(size)))
+                {
+                    a.mInt.Add(0);
+                }
+                if (a.mInt.Count > 0)
+                {
+                    if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
+                    {
+                        a.mInt.RemoveAt(a.mInt.Count - 1);
+                    }
+                }
+                GUILayout.EndHorizontal();
+
+
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("String:", GUILayout.MaxWidth(size));
+                for (int i = 0; i < a.mStr.Count; i++)
+                {
+                    a.mStr[i] = EditorGUILayout.TextField(a.mStr[i], GUILayout.MaxWidth(size));
+                }
+                if (GUILayout.Button("add", GUILayout.MaxWidth(size)))
+                {
+                    a.mStr.Add("0");
+                }
+                if (a.mStr.Count > 0)
+                {
+                    if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
+                    {
+                        a.mStr.RemoveAt(a.mStr.Count - 1);
+                    }
+                }
+                GUILayout.EndHorizontal();
+
+
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Bool:", GUILayout.MaxWidth(size));
+                for (int i = 0; i < a.mBool.Count; i++)
+                {
+                    a.mBool[i] = EditorGUILayout.Toggle(a.mBool[i], GUILayout.MaxWidth(size));
+                }
+                if (GUILayout.Button("add", GUILayout.MaxWidth(size)))
+                {
+                    a.mBool.Add(true);
+                }
+                if (a.mBool.Count > 0)
+                {
+                    if (GUILayout.Button("del", GUILayout.MaxWidth(size)))
+                    {
+                        a.mBool.RemoveAt(a.mBool.Count - 1);
+                    }
+                }
+                GUILayout.EndHorizontal();
+
+
+
+                GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
 
             }

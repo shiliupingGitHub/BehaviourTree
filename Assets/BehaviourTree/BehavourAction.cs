@@ -1,24 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 namespace Behaviour
 {
     public class BehavourAction
     {
 
-        public enum DataType
-        {
-            FLOAT,
-            INT,
-            STRING,
-            BOOL,
-        }
-        public DataType mDataType;
-        public float f0;
-        public float f1;
-        public int n0;
-        public int n1;
-        public string mStr;
-        public bool mB;
+        public List<float> mFloat = new List<float>();
+        public List<int> mInt = new List<int>();
+        public List<string> mStr = new List<string>();
+        public List<bool> mBool = new List<bool>();
         public string mType = "attack";
     }
 }
