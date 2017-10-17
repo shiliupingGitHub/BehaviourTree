@@ -39,11 +39,11 @@ namespace Behaviour
                 BehaviourNodePreview.Instance = EditorWindow.GetWindow<BehaviourNodePreview>(true);
                 BehaviourNodePreview.Instance.mEditor = this;
             }
-            if (GUILayout.Button("delete"))
+            if (GUILayout.Button("-"))
             {
                 BehaviourTreeEditor.mInstance.DeleteNode(this);
             }
-            if (GUILayout.Button("link", GUILayout.MaxWidth(size)))
+            if (GUILayout.Button("+", GUILayout.MaxWidth(size)))
                 OnConnectSunNode();
             EditorGUILayout.EndVertical();
             GUI.DragWindow();

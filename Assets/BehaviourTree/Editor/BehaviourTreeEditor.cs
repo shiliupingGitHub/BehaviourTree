@@ -73,16 +73,21 @@ namespace Behaviour
                 n.DrawSubNode();
             }
         }
+        Vector2 mScroll = Vector2.zero;
         void DrawNodes()
         {
+            mScroll = GUI.BeginScrollView(new Rect(0, 0, position.width, position.height), mScroll, new Rect(0, 0, 10000, 10000));
             BeginWindows();
+            
             mDrawId = 0;
             foreach (var n in mDraws)
             {
                 n.DrawSimple(mDrawId);
                 mDrawId++;
             }
+            
             EndWindows();
+            GUI.EndScrollView();
         }
 
         void DrawSelect()
